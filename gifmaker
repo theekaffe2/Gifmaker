@@ -1,0 +1,27 @@
+#!/bin/bash
+#set -v -x	
+
+while getopts ":a:" opt; do
+  case $opt in
+    a)
+      echo "-a was triggered, Parameter: $OPTARG" >&2
+	  time=$OPTARG
+	  echo "Making Gifs"
+	  name=$(basename "$3")
+	  mkdir /tmp/grabs2
+	  ffmpeg -v error -ss "$time" -t 2 -i "$3" -r 15 -vf "scale=400:-1" /tmp/grabs2/out%03d.png
+	  ffmpeg -v error -i /tmp/grabs2/out%3d.png -vf palettegen /tmp/grabs2/palette.png
+	  ffmpeg -v error -r 15 -i /tmp/grabs2/out%3d.png -i /tmp/grabs2/palette.png -filter_complex paletteuse=floyd_steinberg -loop 0 "$name".gif	  
+      rm -rf /tmp/grabs2
+	  echo "Done"
+	  ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      exit 1
+      ;;
+    :)
+      echo "Option -$OPTARG requires an argument." >&2
+      exit 1
+      ;;
+  esac
+done
