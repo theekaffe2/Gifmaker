@@ -7,6 +7,61 @@ while getopts ":i" opt; do
 			echo "adding $0 to bashrc as \"makegif\""
 			sdir=$(readlink -f "$0")
 			echo "alias makegif='$sdir'" >> ~/.bashrc
+			echo "Installing mtn"
+			if [ ! -f ~/.mtn/mtn ]; then
+			mkdir ~/.mtn
+			cd ~/.mtn
+			wget -O mtn.tgz http://sourceforge.net/projects/moviethumbnail/files/movie%20thumbnailer%20linux%20binary/mtn-200808a-linux/mtn-200808a-linux.tgz/download
+			tar xzf mtn.tgz
+			mv mtn-*/mtn .
+			chmod +x mtn
+			rm -rf mtn-* mtn.tgz
+			wget -O font.tar.gz https://releases.pagure.org/liberation-fonts/liberation-fonts-ttf-2.00.1.tar.gz
+			tar xzf font.tar.gz
+			mv liberation-*/*.ttf .
+			rm -rf liberation-*/
+			else
+			echo "mtn was found at ~/.mtn/mtn"
+			fi
+			
+			echo "Isntalling python3"
+			if command -v python3.6 2>/dev/null 
+				then
+					echo "python3.6 is already installed"
+				else 
+					wget https://www.python.org/ftp/python/3.6.2/Python-3.6.2.tar.xz && \
+					tar xJf ./Python-3.6.2.tar.xz && \
+					cd ./Python-3.6.2 && \
+					./configure --prefix=$HOME && make && make install 
+					# Configure environment
+					grep -q "export PATH" ~/.bashrc
+					if [[ $? -eq 1 ]]; then
+						echo 'export PATH=$PATH:$HOME/bin' >> ~/.bashrc
+					else
+						grep 'export PATH' ~/.bashrc | grep -q '$HOME'
+						if [[ $? -eq 1 ]]; then
+							sed -i -e 's/PATH=/PATH=$HOME\/bin:/g' ~/.bashrc
+						fi
+					fi
+					# Cleanup
+				cd ..
+				rm -rf ./Python-3.6.2
+				rm -f ./Python-3.6.2.tar.xz
+			fi
+			echo "Installing emptorrentify"
+			wget https://server428.seedhost.eu/alucard/upping/emptorrentify.zip && \
+			unzip emptorrentify.zip && \
+			mv emptorrentify/* ~/bin/ && \
+			rm -rf emptorrentify && \
+			rm -f emptorrentify.zip
+			grep -q emptorrentify ~/.bashrc
+			if [[ $? -eq 1 ]]; then
+				echo alias emptorrent=\'~/usr/local/lib/python3.4 ~/lib/emptorrentify.py\' >> ~/.bashrc
+			fi
+			read -p "Please input your announce key and hit return: " key
+			sed -i -e "s/\/announce/\/$key\/announce/g" ~/bin/py3createemptorrent.py
+			sed -i -e "s/\/announce/\/$key\/announce/g" ~/bin/py3createtorrent.py
+			echo "Done with install"
 			exit
 			;;
 		\?)
