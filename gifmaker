@@ -61,11 +61,15 @@ while getopts ":i" opt; do
 			read -p "Please input your announce key and hit return: " key
 			sed -i -e "s/\/announce/\/$key\/announce/g" ~/bin/py3createemptorrent.py
 			sed -i -e "s/\/announce/\/$key\/announce/g" ~/bin/py3createtorrent.py
+			
+			echo "alias mtns='mkdir -p Screens && ~/.mtn/mtn -n -w 1600 -c 4 -D 6 -b 0.6 -r 6 -j 95 -k 00008b -F FFFFFF:12 -f ~/.mtn/DroidSans-Bold.ttf -O Screens'" >> ~/.bashrc
+			echo "alias mtnf='mkdir -p Screens && ~/.mtn/mtn -n -I -w 0 -c 1 -j 95 -D 12 -f ~/.mtn/DroidSans-Bold.ttf -O Screens'" >> ~/.bashrc
+			echo "alias mtnq='mkdir -p Screens && ~/.mtn/mtn -f ~/.mtn/DroidSans-Bold.ttf -n -s 10 -c 3 -D 6 -b 0.6 -h 100 -r 15 -w 1600 -D7 -b 1 -L 4:1 -j 90 -k 00008b -F FFFFFF:12 -o -empblue.jpg -O Screens'" >> ~/.bashrc
 			echo "Done with install"
 			exit
 			;;
 		\?)
-			echo "Invalid option: -$OPTARG"
+			echo "Invalid option: -"$OPTARG""
 			exit
 			;;
 	esac
