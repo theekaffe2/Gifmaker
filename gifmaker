@@ -1,10 +1,19 @@
 #!/bin/bash
 #set -v -x	
+echo "Making torrent"
+~/bin/python3.6 /home/owner/bin/emptorrentify.py
+echo "Done with Torrent"
+
+echo ""
 
 while getopts ":a:" opt; do
   case $opt in
     a)
-      echo "-a was triggered, Parameter: $OPTARG" >&2
+      echo "Making Screens"
+	  mkdir -p Screens && ~/.mtn/mtn -f ~/.mtn/DroidSans-Bold.ttf -n -s 10 -c 3 -D 6 -b 0.6 -h 100 -r 15 -w 1600 -L 4:1 -j 90 -k 00008b -F FFFFFF:12 -o -empblue.jpg -O Screens "$3"
+	  echo "Done with Screens"
+	  echo ""
+	  echo "-a was triggered, Parameter: $OPTARG" >&2
 	  time=$OPTARG
 	  echo "Making Gifs"
 	  name=$(basename "$3")
@@ -25,3 +34,11 @@ while getopts ":a:" opt; do
       ;;
   esac
 done
+#emptorrent 
+#mtnq "$1"
+
+if [ -z "$time" ]; then
+	echo "Making Screens"
+	mkdir -p Screens && ~/.mtn/mtn -f ~/.mtn/DroidSans-Bold.ttf -n -s 10 -c 3 -D 6 -b 0.6 -h 100 -r 15 -w 1600 -L 4:1 -j 90 -k 00008b -F FFFFFF:12 -o -empblue.jpg -O Screens "$1"
+	echo "Done with Screens"
+fi
