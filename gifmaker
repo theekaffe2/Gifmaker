@@ -1,5 +1,21 @@
 #!/bin/bash
 #set -v -x	
+
+while getopts ":i" opt; do
+	case $opt in
+		i)
+			echo "adding $0 to bashrc as \"makegif\""
+			sdir=$(readlink -f "$0")
+			echo "alias makegif='$sdir'" >> ~/.bashrc
+			exit
+			;;
+		\?)
+			echo "Invalid option: -$OPTARG"
+			exit
+			;;
+	esac
+done
+
 echo "Making torrent"
 ~/bin/python3.6 /home/owner/bin/emptorrentify.py
 echo "Done with Torrent"
