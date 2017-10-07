@@ -5,6 +5,9 @@ echo "Making torrent"
 echo "Done with Torrent"
 curdir=$(pwd)
 
+if [ ! -d "$HOME"/_output/ ]; then
+	mkdir "$HOME"/_output
+fi
 
 while getopts ":a:" opt; do
   case $opt in
@@ -34,9 +37,6 @@ while getopts ":a:" opt; do
   esac
 done
 
-if [ ! -d "$HOME"/_output/ ]; then
-	mkdir "$HOME"/_output
-fi
 
 if [ -z "$time" ]; then
 	echo "Making Screens"
