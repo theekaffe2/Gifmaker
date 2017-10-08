@@ -1,7 +1,7 @@
 #!/bin/bash
 #set -v -x	
 
-while getopts ":i" opt; do
+while getopts ":i:a:" opt; do
 	case $opt in
 		i)
 			echo "adding $0 to bashrc as \"makegif\""
@@ -68,6 +68,23 @@ while getopts ":i" opt; do
 			echo "Done with install"
 			exit
 			;;
+		 a)
+     		echo "Making Screens"
+	  		~/.mtn/mtn -f ~/.mtn/DroidSans-Bold.ttf -n -s 10 -c 3 -D 6 -b 0.6 -h 100 -r 15 -w 1600 -L 4:1 -j 90 -k 00008b -F FFFFFF:12 -o -empblue.jpg -O "$HOME"/_output/ "$3"
+	  		echo "Done with Screens"
+	  		echo "-a was triggered, Parameter: $OPTARG" >&2
+	  		time=$OPTARG
+	  		echo "Making Gifs"
+	  		name=$(basename "$3")
+	  		mkdir /tmp/grabs2
+	  		ffmpeg -v error -ss "$time" -t 2 -i "$3" -r 15 -vf "scale=400:-1" /tmp/grabs2/out%03d.png
+	  		ffmpeg -v error -i /tmp/grabs2/out%3d.png -vf palettegen /tmp/grabs2/palette.png
+	  		ffmpeg -v error -r 15 -i /tmp/grabs2/out%3d.png -i /tmp/grabs2/palette.png -filter_complex paletteuse=floyd_steinberg -loop 0 "$name".gif	  
+      		rm -rf /tmp/grabs2
+	  		echo "Done"
+	  		echo "Making text file"
+	  		mediainfo "$3" >> $3info.txt
+	  		;;
 		\?)
 			echo "Invalid option: -"$OPTARG""
 			exit
@@ -84,36 +101,6 @@ if [ ! -d "$HOME"/_output/ ]; then
 	mkdir "$HOME"/_output
 fi
 
-while getopts ":a:" opt; do
-  case $opt in
-    a)
-      echo "Making Screens"
-	  ~/.mtn/mtn -f ~/.mtn/DroidSans-Bold.ttf -n -s 10 -c 3 -D 6 -b 0.6 -h 100 -r 15 -w 1600 -L 4:1 -j 90 -k 00008b -F FFFFFF:12 -o -empblue.jpg -O "$HOME"/_output/ "$3"
-	  echo "Done with Screens"
-	  echo "-a was triggered, Parameter: $OPTARG" >&2
-	  time=$OPTARG
-	  echo "Making Gifs"
-	  name=$(basename "$3")
-	  mkdir /tmp/grabs2
-	  ffmpeg -v error -ss "$time" -t 2 -i "$3" -r 15 -vf "scale=400:-1" /tmp/grabs2/out%03d.png
-	  ffmpeg -v error -i /tmp/grabs2/out%3d.png -vf palettegen /tmp/grabs2/palette.png
-	  ffmpeg -v error -r 15 -i /tmp/grabs2/out%3d.png -i /tmp/grabs2/palette.png -filter_complex paletteuse=floyd_steinberg -loop 0 "$name".gif	  
-      rm -rf /tmp/grabs2
-	  echo "Done"
-	  echo "Making text file"
-	  mediainfo "$3" >> $3info.txt
-	  echo "Done" 
-	  ;;
-    \?)
-      echo "Invalid option: -$OPTARG" >&2
-      exit 1
-      ;;
-    :)
-      echo "Option -$OPTARG requires an argument." >&2
-      exit 1
-      ;;
-  esac
-done
 
 
 if [ -z "$time" ]; then
