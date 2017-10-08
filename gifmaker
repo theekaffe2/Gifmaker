@@ -100,6 +100,9 @@ while getopts ":a:" opt; do
 	  ffmpeg -v error -r 15 -i /tmp/grabs2/out%3d.png -i /tmp/grabs2/palette.png -filter_complex paletteuse=floyd_steinberg -loop 0 "$name".gif	  
       rm -rf /tmp/grabs2
 	  echo "Done"
+	  echo "Making text file"
+	  mediainfo "$3" >> $3info.txt
+	  echo "Done" 
 	  ;;
     \?)
       echo "Invalid option: -$OPTARG" >&2
@@ -117,6 +120,9 @@ if [ -z "$time" ]; then
 	echo "Making Screens"
 	~/.mtn/mtn -f ~/.mtn/DroidSans-Bold.ttf -n -s 10 -c 3 -D 6 -b 0.6 -h 100 -r 15 -w 1600 -L 4:1 -j 90 -k 00008b -F FFFFFF:12 -o -O "$HOME"/_output/ -empblue.jpg "$1"
 	echo "Done with Screens"
+	echo "Making text file"
+	mediainfo "$1" >> $1info.txt
+	echo "Done"
 fi
 
 echo "Moving Files"
