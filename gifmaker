@@ -1,6 +1,10 @@
 #!/bin/bash
 #set -v -x	
 
+if [ ! -d "$HOME"/_output/ ]; then
+	mkdir "$HOME"/_output
+fi
+
 while getopts ":i:a:" opt; do
 	case $opt in
 		i)
@@ -69,7 +73,11 @@ while getopts ":i:a:" opt; do
 			exit
 			;;
 		 a)
-     		echo "Making Screens"
+     		echo "Making torrent"
+			~/bin/python3.6 /home/owner/bin/emptorrentify.py
+			echo "Done with Torrent"
+			curdir=$(pwd)
+			echo "Making Screens"
 	  		~/.mtn/mtn -f ~/.mtn/DroidSans-Bold.ttf -n -s 10 -c 3 -D 6 -b 0.6 -h 100 -r 15 -w 1600 -L 4:1 -j 90 -k 00008b -F FFFFFF:12 -o -empblue.jpg -O "$HOME"/_output/ "$3"
 	  		echo "Done with Screens"
 	  		echo "-a was triggered, Parameter: $OPTARG" >&2
@@ -92,18 +100,16 @@ while getopts ":i:a:" opt; do
 	esac
 done
 
-echo "Making torrent"
-~/bin/python3.6 /home/owner/bin/emptorrentify.py
-echo "Done with Torrent"
-curdir=$(pwd)
 
-if [ ! -d "$HOME"/_output/ ]; then
-	mkdir "$HOME"/_output
-fi
+
 
 
 
 if [ -z "$time" ]; then
+	echo "Making torrent"
+	~/bin/python3.6 /home/owner/bin/emptorrentify.py
+	echo "Done with Torrent"
+	curdir=$(pwd)
 	echo "Making Screens"
 	~/.mtn/mtn -f ~/.mtn/DroidSans-Bold.ttf -n -s 10 -c 3 -D 6 -b 0.6 -h 100 -r 15 -w 1600 -L 4:1 -j 90 -k 00008b -F FFFFFF:12 -o -O "$HOME"/_output/ -empblue.jpg "$1"
 	echo "Done with Screens"
