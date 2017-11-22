@@ -74,6 +74,9 @@ while getopts ":i:a:" opt; do
 			;;
 		 a)
      		echo "Making torrent"
+			for i in "$@:3}"; do
+				python3 "$HOME"/bin/py3createemptorrent.py -p 16000 -o "$HOME"/_output "$i"
+			done
 			~/bin/python3.6 /home/owner/bin/emptorrentify.py
 			echo "Done with Torrent"
 			curdir=$(pwd)
@@ -107,7 +110,9 @@ done
 
 if [ -z "$time" ]; then
 	echo "Making torrent"
-	~/bin/python3.6 /home/owner/bin/emptorrentify.py
+	for i in "$@:1}"; do
+		python3 "$HOME"/bin/py3createemptorrent.py -p 16000 -o "$HOME"/_output "$i"
+	done
 	echo "Done with Torrent"
 	curdir=$(pwd)
 	echo "Making Screens"
@@ -120,5 +125,6 @@ fi
 
 echo "Moving Files"
 mv "$curdir"/*.torrent "$HOME"/_output/
+mv "$curdir"/*.txt "$HOME"/_output/
 mv "$curdir"/*.gif "$HOME"/_output/
 echo "Done with moving files"
